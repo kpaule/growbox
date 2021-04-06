@@ -6,6 +6,6 @@ COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
-COPY ./app ./app
+COPY ./growbox ./growbox
 
-CMD ["python", "-m", "app"]
+CMD ["python", "-m", "growbox"]
