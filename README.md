@@ -91,7 +91,7 @@ db.create_all()
 
 # add row
 from growbox import User
-u = User(username="admin", password="password")
+u = User(username="admin", password="$2b$12$aTjB4dj.K2t67gUJgSn4vu5uSxthhabnAbOUFyhIKhBgs6CgtxkpO") # pw = admin
 db.session.add(u)
 db.session.commit()
 
@@ -99,4 +99,17 @@ db.session.commit()
 User.query.all()
 User.query.first()
 User.query.filter_by(username="admin").first()
+```
+
+## Password hash usage
+```
+from flask_bcrypt import Bcrypt
+bcrypt = Bcrypt()
+
+# generate password hash
+hashed_pw = bcrypt.generate_password_hash("testing").decode("utf-8")
+
+# check password hash
+bcrypt.check_password_hash(hashed_pw, "testing")
+
 ```
