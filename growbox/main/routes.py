@@ -1,23 +1,21 @@
-from flask import flash, redirect, render_template, request
-from flask.helpers import url_for
-from flask_login import current_user, login_required, login_user, logout_user
-
-from growbox import app, bcrypt
-from growbox.forms import LoginForm
+from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask_login import current_user, login_user, logout_user
+from growbox import bcrypt
+from growbox.main.forms import LoginForm
 from growbox.models import User
 
+main = Blueprint("main", __name__)
 
-@app.route('/')
-@app.route('/index/')
-@app.route('/home/')
-def home():
+@main.route('/')
+@main.route('/index/')
+def index():
     return render_template("index.html")
 
 
-@app.route("/login/", methods=["GET", "POST"])
+@main.route("/login/", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("home.dashboard"))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
@@ -27,19 +25,13 @@ def login():
             if next_page:
                 return redirect(next_page)
             else:
-                return redirect(url_for("dashboard"))
+                return redirect(url_for("home.dashboard"))
         else:
             flash(f"Login Unsuccessful. Please check username and password.", "danger")
     return render_template("login.html", form=form)
 
 
-@app.route('/logout/')
+@main.route('/logout/')
 def logout():
     logout_user()
-    return redirect(url_for("home"))
-
-
-@app.route('/dashboard/')
-@login_required
-def dashboard():
-    return render_template("dashboard.html")
+    return redirect(url_for("main.index"))
