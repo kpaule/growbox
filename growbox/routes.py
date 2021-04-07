@@ -1,7 +1,9 @@
-from flask import Flask, render_template, flash, redirect
+from flask import Flask, flash, redirect, render_template
 from flask.helpers import url_for
+
 from growbox import app
 from growbox.forms import LoginForm
+
 
 @app.route('/')
 @app.route('/index/')

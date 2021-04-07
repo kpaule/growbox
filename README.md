@@ -82,3 +82,21 @@ Im Projekt “Klimakontrolle eines Raums“ soll mithilfe eines IoT Geräts eine
 `sudo docker build -t python-growbox .`
 ### Run
 `sudo docker run -p 5000:5000 python-growbox`
+
+## DB usage
+```
+# create db
+from growbox import db
+db.create_all()
+
+# add row
+from growbox import User
+u = User(username="admin", password="password")
+db.session.add(u)
+db.session.commit()
+
+# query data
+User.query.all()
+User.query.first()
+User.query.filter_by(username="admin").first()
+```
