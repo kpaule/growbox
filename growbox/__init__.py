@@ -25,4 +25,8 @@ def create_app(config_class=Config):
 
     return app
 
+<<<<<<< HEAD
 # Hallo mein Kommentar
+=======
+    #haha
+>>>>>>> e86f61ee155121255e1ef5324061106c919e88b6
