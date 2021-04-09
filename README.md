@@ -86,11 +86,13 @@ Im Projekt “Klimakontrolle eines Raums“ soll mithilfe eines IoT Geräts eine
 ## DB usage
 ```
 # create db
-from growbox import db
+from growbox import db, create_app
+app = create_app()
+app.app_context().push()
 db.create_all()
 
 # add row
-from growbox import User
+from growbox.models import User
 u = User(username="admin", password="$2b$12$aTjB4dj.K2t67gUJgSn4vu5uSxthhabnAbOUFyhIKhBgs6CgtxkpO") # pw = admin
 db.session.add(u)
 db.session.commit()
