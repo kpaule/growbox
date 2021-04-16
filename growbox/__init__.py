@@ -3,12 +3,14 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from growbox.config import Config
+from flask_mqtt import Mqtt
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
 login_manager.login_view = "main.login"
 login_manager.login_message_category = "info"
+mqtt = Mqtt()
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -17,10 +19,14 @@ def create_app(config_class=Config):
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)
+    mqtt.init_app(app)
 
     from growbox.main.routes import main
     from growbox.home.routes import home    
     app.register_blueprint(main)
     app.register_blueprint(home)
+
+    from growbox.mqtt_client.subscriber import mqtt_client
+    app.register_blueprint(mqtt_client)
 
     return app
