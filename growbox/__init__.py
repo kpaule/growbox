@@ -19,14 +19,15 @@ def create_app(config_class=Config):
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)
-    mqtt.init_app(app)
 
     from growbox.main.routes import main
-    from growbox.home.routes import home    
+    from growbox.home.routes import home
     app.register_blueprint(main)
     app.register_blueprint(home)
 
     from growbox.mqtt_client.subscriber import mqtt_client
     app.register_blueprint(mqtt_client)
+
+    mqtt.init_app(app)
 
     return app
