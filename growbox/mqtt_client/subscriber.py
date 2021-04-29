@@ -11,10 +11,57 @@ def handle_connect(client, userdata, flags, rc):
     if rc != 0:
         logging.error(f"Connection to broker failed with code: {rc}")
     else:
-        mqtt.subscribe("growbox/temp")
-        mqtt.subscribe("growbox/humid")
+        mqtt.subscribe("growboxhsalbsensors/Bodenfeucht")
+        mqtt.subscribe("growboxhsalbsensors/Feuchwand")
+        mqtt.subscribe("growboxhsalbsensors/Tempwand")
+        mqtt.subscribe("growboxhsalbsensors/TempBoden")
+        mqtt.subscribe("growboxhsalbsensors/LED")
+        mqtt.subscribe("growboxhsalbsensors/Luefter")
+        mqtt.subscribe("growboxhsalbsensors/Pumpe")
+        mqtt.subscribe("growboxhsalbsensors/Heizung")
 
 
-@mqtt.on_message()
-def handle_mqtt_message(client, userdata, msg):
-    print(msg.topic + " " + str(msg.payload), file=sys.stderr)
+@mqtt.on_topic("growboxhsalbsensors/Bodenfeucht")
+def handle_topic_bodenfeucht(client, userdata, message):
+    print(f"Received message on topic {message.topic}: {message.payload.decode()}")
+
+
+@mqtt.on_topic("growboxhsalbsensors/Feuchwand")
+def handle_topic_bodenfeucht(client, userdata, message):
+    print(f"Received message on topic {message.topic}: {message.payload.decode()}")
+
+
+@mqtt.on_topic("growboxhsalbsensors/Tempwand")
+def handle_topic_bodenfeucht(client, userdata, message):
+    print(f"Received message on topic {message.topic}: {message.payload.decode()}")
+
+
+@mqtt.on_topic("growboxhsalbsensors/TempBoden")
+def handle_topic_bodenfeucht(client, userdata, message):
+    print(f"Received message on topic {message.topic}: {message.payload.decode()}")
+
+
+@mqtt.on_topic("growboxhsalbsensors/LED")
+def handle_topic_bodenfeucht(client, userdata, message):
+    print(f"Received message on topic {message.topic}: {message.payload.decode()}")
+
+
+@mqtt.on_topic("growboxhsalbsensors/Luefter")
+def handle_topic_bodenfeucht(client, userdata, message):
+    print(f"Received message on topic {message.topic}: {message.payload.decode()}")
+
+
+@mqtt.on_topic("growboxhsalbsensors/Pumpe")
+def handle_topic_bodenfeucht(client, userdata, message):
+    print(f"Received message on topic {message.topic}: {message.payload.decode()}")
+
+
+@mqtt.on_topic("growboxhsalbsensors/Heizung")
+def handle_topic_bodenfeucht(client, userdata, message):
+    print(f"Received message on topic {message.topic}: {message.payload.decode()}")
+    
+
+# For debugging
+#@mqtt.on_log()
+#def handle_logging(client, userdata, level, buf):
+#    print(client, userdata, level, buf)
