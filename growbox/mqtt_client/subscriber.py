@@ -1,5 +1,4 @@
 import logging
-import sys
 from flask import Blueprint
 from growbox import mqtt
 
@@ -59,7 +58,7 @@ def handle_topic_bodenfeucht(client, userdata, message):
 @mqtt.on_topic("growboxhsalbsensors/Heizung")
 def handle_topic_bodenfeucht(client, userdata, message):
     print(f"Received message on topic {message.topic}: {message.payload.decode()}")
-    
+
 
 # For debugging
 #@mqtt.on_log()
