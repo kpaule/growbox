@@ -1,6 +1,7 @@
 import logging
-import sys
+
 from flask import Blueprint
+
 from growbox import mqtt
 
 mqtt_client = Blueprint("mqtt_client", __name__)
@@ -11,14 +12,7 @@ def handle_connect(client, userdata, flags, rc):
     if rc != 0:
         logging.error(f"Connection to broker failed with code: {rc}")
     else:
-        mqtt.subscribe("growboxhsalbsensors/Bodenfeucht")
-        mqtt.subscribe("growboxhsalbsensors/Feuchwand")
-        mqtt.subscribe("growboxhsalbsensors/Tempwand")
-        mqtt.subscribe("growboxhsalbsensors/TempBoden")
-        mqtt.subscribe("growboxhsalbsensors/LED")
-        mqtt.subscribe("growboxhsalbsensors/Luefter")
-        mqtt.subscribe("growboxhsalbsensors/Pumpe")
-        mqtt.subscribe("growboxhsalbsensors/Heizung")
+        mqtt.subscribe("growboxhsalbsensors/#")
 
 
 @mqtt.on_topic("growboxhsalbsensors/Bodenfeucht")
@@ -59,9 +53,8 @@ def handle_topic_bodenfeucht(client, userdata, message):
 @mqtt.on_topic("growboxhsalbsensors/Heizung")
 def handle_topic_bodenfeucht(client, userdata, message):
     print(f"Received message on topic {message.topic}: {message.payload.decode()}")
-    
 
 # For debugging
-#@mqtt.on_log()
-#def handle_logging(client, userdata, level, buf):
+# @mqtt.on_log()
+# def handle_logging(client, userdata, level, buf):
 #    print(client, userdata, level, buf)
