@@ -19,21 +19,37 @@ def load_user(user_id: int) -> User:
     return User.query.get(user_id)
 
 
-class Temperature(db.Model):
+class TemperatureWall(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    topic = db.Column(db.String(100), nullable=False)
-    temperature = db.Column(db.Integer, nullable=False)
+    temperature = db.Column(db.Float, nullable=False)
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __repr__(self) -> str:
-        return f"Temperature('{self.topic}', '{self.temperature}', '{self.date}')"
+        return f"TemperatureWall('{self.temperature}', '{self.date}')"
 
 
-class Humidity(db.Model):
+class TemperatureFloor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    topic = db.Column(db.String(100), nullable=False)
-    humidity = db.Column(db.Integer, nullable=False)
+    temperature = db.Column(db.Float, nullable=False)
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __repr__(self) -> str:
-        return f"Humidity('{self.topic}', '{self.humidity}', '{self.date}')"
+        return f"TemperatureFloor('{self.temperature}', '{self.date}')"
+
+
+class HumidityWall(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    humidity = db.Column(db.Float, nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def __repr__(self) -> str:
+        return f"HumidityWall('{self.humidity}', '{self.date}')"
+
+
+class HumidityFloor(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    humidity = db.Column(db.Float, nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def __repr__(self) -> str:
+        return f"HumidityFloor('{self.humidity}', '{self.date}')"
