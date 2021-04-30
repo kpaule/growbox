@@ -1,7 +1,9 @@
 import json
 import logging
 
-from growbox import mqtt
+from growbox import create_app, db, mqtt
+from growbox.models import (HumidityFloor, HumidityWall, TemperatureFloor,
+                            TemperatureWall)
 
 
 @mqtt.on_connect()
@@ -17,25 +19,33 @@ def handle_message(client, userdata, message):
     print(f"Received message {message.payload.decode()}")
     data = json.loads(message.payload)
     
-    for key, value in data.items():
-        print(f"{key}: {value}")
+    # outside an application context -> manually push a context
+    with create_app().app_context():
+        for key, value in data.items():
+            print(f"{key}: {value}")
 
-        if key == "Bodenfeucht":
-            pass
-        elif key == "Feuchwand":
-            pass
-        elif key == "Tempwand":
-            pass
-        elif key == "TempBoden":
-            pass
-        elif key == "LED":
-            pass
-        elif key == "Luefter":
-            pass
-        elif key == "Pumpe":
-            pass
-        elif key == "Heizung":
-            pass
+            if key == "Bodenfeucht":
+                humidityFloor = HumidityFloor(humidity=value)
+                db.session.add(humidityFloor)
+            elif key == "Feuchwand":
+                humidityWall = HumidityWall(humidity=value)
+                db.session.add(humidityWall)
+            elif key == "Tempwand":
+                temperatureWall = TemperatureWall(temperature=value)
+                db.session.add(temperatureWall)
+            elif key == "TempBoden":
+                temperatureFloor = TemperatureFloor(temperature=value)
+                db.session.add(temperatureFloor)
+            elif key == "LED":
+                pass
+            elif key == "Luefter":
+                pass
+            elif key == "Pumpe":
+                pass
+            elif key == "Heizung":
+                pass
+
+        db.session.commit()
 
 # For debugging
 # @mqtt.on_log()
