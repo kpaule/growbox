@@ -28,9 +28,7 @@ def create_app(config_class=Config):
     app.register_blueprint(main)
     app.register_blueprint(home)
 
-    from growbox.mqtt_client.subscriber import mqtt_client
-    app.register_blueprint(mqtt_client)
-
+    from growbox.mqtt_client import subscriber
     mqtt.init_app(app)
 
     return app

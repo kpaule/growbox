@@ -1,10 +1,7 @@
 import json
 import logging
 
-from flask import Blueprint
 from growbox import mqtt
-
-mqtt_client = Blueprint("mqtt_client", __name__)
 
 
 @mqtt.on_connect()
