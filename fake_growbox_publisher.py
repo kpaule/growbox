@@ -1,4 +1,4 @@
-import random, time
+import random, time, json
 
 import paho.mqtt.client as paho
 
@@ -17,8 +17,13 @@ while True:
     #client.publish("growboxhsalb", "{\"Pumpe\":\"off\"}")
     #client.publish("growboxhsalb", "{\"Heizung\":\"off\"}")
     #client.publish("growboxhsalb", "{\"Luefter\":\"off\"}")
-    client.publish("growboxhsalbsensors/Bodenfeucht", random.uniform(1.5, 1.9), 0)
-    client.publish("growboxhsalbsensors/Feuchwand", random.uniform(1.5, 1.9), 0)
-    client.publish("growboxhsalbsensors/Tempwand", random.uniform(15.0, 16.0), 0)
-    client.publish("growboxhsalbsensors/TempBoden", random.uniform(15.0, 16.0), 0)
+
+    test_dict = {
+        "Bodenfeucht": random.uniform(1.5, 1.9),
+        "Feuchwand": random.uniform(1.5, 1.9),
+        "Tempwand": random.uniform(15.0, 16.0),
+        "TempBoden": random.uniform(15.0, 16.0)
+    }
+
+    client.publish("growboxhsalbsensors", json.dumps(test_dict), 0)
     time.sleep(10)
