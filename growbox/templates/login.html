@@ -6,6 +6,17 @@
     <div class="container-fluid">
         <div class="row">
             <main role="main" class="col-sm-8 col-md-6 col-lg-4 col-centered">
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
                 <form method="POST" action="">
                     {{ form.hidden_tag() }} <!-- generates a hidden field that includes a token that is used to protect the form against CSRF attacks -->
                     <fieldset class="form-group">
