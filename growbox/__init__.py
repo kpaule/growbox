@@ -2,6 +2,7 @@ from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+from flask_socketio import SocketIO
 from growbox.config import Config
 from flask_mqtt import Mqtt
 
@@ -11,6 +12,7 @@ login_manager = LoginManager()
 login_manager.login_view = "main.login"
 login_manager.login_message_category = "info"
 mqtt = Mqtt()
+socketio = SocketIO()
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -19,6 +21,7 @@ def create_app(config_class=Config):
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)
+    socketio.init_app(app)
 
     from growbox.main.routes import main
     from growbox.home.routes import home
