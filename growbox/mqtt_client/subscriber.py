@@ -22,28 +22,32 @@ def handle_message(client, userdata, message):
     # outside an application context -> manually push a context
     with create_app().app_context():
         for key, value in data.items():
-            print(f"{key}: {value}")
+            # Validate mqtt data to prevent xss vulnerability
+            if type(value) == float or value == "on" or value == "off":
+                print(f"{key}: {value}")
 
-            if key == "Bodenfeucht":
-                humidityFloor = HumidityFloor(humidity=value)
-                db.session.add(humidityFloor)
-            elif key == "Feuchwand":
-                humidityWall = HumidityWall(humidity=value)
-                db.session.add(humidityWall)
-            elif key == "Tempwand":
-                temperatureWall = TemperatureWall(temperature=value)
-                db.session.add(temperatureWall)
-            elif key == "TempBoden":
-                temperatureFloor = TemperatureFloor(temperature=value)
-                db.session.add(temperatureFloor)
-            elif key == "LED":
-                pass
-            elif key == "Luefter":
-                pass
-            elif key == "Pumpe":
-                pass
-            elif key == "Heizung":
-                pass
+                if key == "Bodenfeucht":
+                    humidityFloor = HumidityFloor(humidity=value)
+                    db.session.add(humidityFloor)
+                elif key == "Feuchwand":
+                    humidityWall = HumidityWall(humidity=value)
+                    db.session.add(humidityWall)
+                elif key == "Tempwand":
+                    temperatureWall = TemperatureWall(temperature=value)
+                    db.session.add(temperatureWall)
+                elif key == "TempBoden":
+                    temperatureFloor = TemperatureFloor(temperature=value)
+                    db.session.add(temperatureFloor)
+                elif key == "LED":
+                    pass
+                elif key == "Luefter":
+                    pass
+                elif key == "Pumpe":
+                    pass
+                elif key == "Heizung":
+                    pass
+            else:
+                print(f"Unexpected mqtt data recived: ({key}: {value})")
 
         db.session.commit()
 
