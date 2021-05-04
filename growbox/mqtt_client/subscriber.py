@@ -1,9 +1,13 @@
 import json
 import logging
 
+from flask import current_app
 from growbox import create_app, db, mqtt
 from growbox.models import (HumidityFloor, HumidityWall, TemperatureFloor,
                             TemperatureWall)
+
+with create_app().app_context():
+    topic = current_app.config["MQTT_TOPIC"]
 
 
 @mqtt.on_connect()
@@ -11,14 +15,14 @@ def handle_connect(client, userdata, flags, rc):
     if rc != 0:
         logging.error(f"Connection to broker failed with code: {rc}")
     else:
-        mqtt.subscribe("growboxhsalbsensors")
+        mqtt.subscribe(topic)
 
 
 @mqtt.on_message()
 def handle_message(client, userdata, message):
     print(f"Received message {message.payload.decode()}")
     data = json.loads(message.payload)
-    
+
     # outside an application context -> manually push a context
     with create_app().app_context():
         for key, value in data.items():
