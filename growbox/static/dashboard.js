@@ -13,10 +13,55 @@ function getMetricsNow() {
     });
 }
 
+function getAvgDay() {
+    $.getJSON("/dashboard/day/", function (metrics) {
+        console.log(metrics);
+        var humidity_air = [];
+        var humidity_ground = [];
+        var date = [];
+
+        for (var key in metrics){
+            metric = metrics[key]
+            humidity_air.push(metric.humidity_air)
+            humidity_ground.push(metric.humidity_ground)
+            date.push(metric.date_start)
+        }
+        humidity_air.reverse()
+        humidity_ground.reverse()
+        date.reverse()
+
+        var ctx = document.getElementById('humidityChart');
+        var humidityChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: date,
+                datasets: [{
+                    label: 'Air Humidity',
+                    data: humidity_air,
+                    borderWidth: 1
+                },{
+                    label: 'Soil Humidity ',
+                    data: humidity_ground,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+}
+
 $(document).ready(function () {
     getMetricsNow();
+    getAvgDay();
     setInterval(function () {
         getMetricsNow();
+        getAvgDay();
     }, 5000);
 
     $('#flex_switch_light').change(function () {
