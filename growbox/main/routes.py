@@ -6,8 +6,8 @@ from growbox.models import User
 
 main = Blueprint("main", __name__)
 
-@main.route('/')
-@main.route('/index/')
+@main.route("/")
+@main.route("/index/")
 def index():
     if current_user.is_authenticated:
         return redirect(url_for("home.dashboard"))
@@ -34,7 +34,7 @@ def login():
     return render_template("login.html", form=form)
 
 
-@main.route('/logout/')
+@main.route("/logout/")
 def logout():
     logout_user()
     return redirect(url_for("main.index"))
