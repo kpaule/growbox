@@ -8,5 +8,10 @@ home = Blueprint("home", __name__)
 @home.route('/dashboard/')
 @login_required
 def dashboard():
-    return render_template("dashboard.html")
+    metrics = Metric.query.all()
+    metrics_date = [x.date.strftime("%A, %d. %B %Y %I:%M%p") for x in metrics]
+    return render_template("dashboard_overview.html",
+                           metrics=metrics,
+                           metrics_date=metrics_date)
+
 

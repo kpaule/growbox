@@ -19,37 +19,17 @@ def load_user(user_id: int) -> User:
     return User.query.get(user_id)
 
 
-class TemperatureWall(db.Model):
+class Metric(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    temperature = db.Column(db.Float, nullable=False)
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    temperature_air = db.Column(db.Float, nullable=False)
+    temperature_ground = db.Column(db.Float, nullable=False)
+    humidity_air = db.Column(db.Float, nullable=False)
+    humidity_ground = db.Column(db.Float, nullable=False)
+    light = db.Column(db.Boolean, nullable=False)
+    pump = db.Column(db.Boolean, nullable=False)
+    heating = db.Column(db.Boolean, nullable=False)
+    fan = db.Column(db.Boolean, nullable=False)
 
     def __repr__(self) -> str:
-        return f"TemperatureWall('{self.temperature}', '{self.date}')"
-
-
-class TemperatureFloor(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    temperature = db.Column(db.Float, nullable=False)
-    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-    def __repr__(self) -> str:
-        return f"TemperatureFloor('{self.temperature}', '{self.date}')"
-
-
-class HumidityWall(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    humidity = db.Column(db.Float, nullable=False)
-    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-    def __repr__(self) -> str:
-        return f"HumidityWall('{self.humidity}', '{self.date}')"
-
-
-class HumidityFloor(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    humidity = db.Column(db.Float, nullable=False)
-    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-    def __repr__(self) -> str:
-        return f"HumidityFloor('{self.humidity}', '{self.date}')"
+        return f"Metric('{self.date}', '{self.temperature_air}', '{self.temperature_air}', '{self.temperature_ground}', '{self.humidity_wall}', '{self.light}', '{self.pump}', '{self.heating}', '{self.fan}')"

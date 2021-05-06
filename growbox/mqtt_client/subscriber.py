@@ -3,8 +3,7 @@ import logging
 
 from flask import current_app
 from growbox import create_app, db, mqtt
-from growbox.models import (HumidityFloor, HumidityWall, TemperatureFloor,
-                            TemperatureWall)
+from growbox.models import Metric
 
 with create_app().app_context():
     topic = current_app.config["MQTT_TOPIC"]
@@ -23,37 +22,22 @@ def handle_message(client, userdata, message):
     print(f"Received message {message.payload.decode()}")
     data = json.loads(message.payload)
 
+    metric = Metric()
+    metric.humidity_ground = data.get("Bodenfeucht", 0.0)
+    metric.humidity_air = data.get("Feuchwand", 0.0)
+    metric.temperature_air = data.get("Tempwand", 0.0)
+    metric.temperature_ground = data.get("TempBoden", 0.0)
+    metric.light = True if data.get("LED") == "on" else False
+    metric.fan = True if data.get("Luefter") == "on" else False
+    metric.pump = True if data.get("Pumpe") == "on" else False
+    metric.heating = True if data.get("Heizung") == "on" else False
+
     # outside an application context -> manually push a context
     with create_app().app_context():
-        for key, value in data.items():
-            # Validate mqtt data to prevent xss vulnerability
-            if type(value) == float or value == "on" or value == "off":
-                print(f"{key}: {value}")
-
-                if key == "Bodenfeucht":
-                    humidityFloor = HumidityFloor(humidity=value)
-                    db.session.add(humidityFloor)
-                elif key == "Feuchwand":
-                    humidityWall = HumidityWall(humidity=value)
-                    db.session.add(humidityWall)
-                elif key == "Tempwand":
-                    temperatureWall = TemperatureWall(temperature=value)
-                    db.session.add(temperatureWall)
-                elif key == "TempBoden":
-                    temperatureFloor = TemperatureFloor(temperature=value)
-                    db.session.add(temperatureFloor)
-                elif key == "LED":
-                    pass
-                elif key == "Luefter":
-                    pass
-                elif key == "Pumpe":
-                    pass
-                elif key == "Heizung":
-                    pass
-            else:
-                print(f"Unexpected mqtt data recived: ({key}: {value})")
-
-        db.session.commit()
+        try:
+            db.session.add(metric)
+            db.session.commit()
+        except Exception as e: print(e)
 
 # For debugging
 # @mqtt.on_log()
