@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block titel %}Dashboard{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <main role="main" class="col-lg-12 px-4">
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Temperature</h5>
+                                    <canvas id="temperatureChart"></canvas>
+                                    <script type="text/javascript"
+                                            src="{{ url_for('static', filename='chart_temp.js') }}"></script>
+                                    <script type="text/javascript">
+                                        initTemperatureChart({{ temp_floor_data|safe }}, {{ temp_floor_date|safe }});
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Humidity</h5>
+                                    <canvas id="humidityChart"></canvas>
+                                    <script type="text/javascript"
+                                            src="{{ url_for('static', filename='chart_humi.js') }}"></script>
+                                    <script type="text/javascript">
+                                        initHumidityChart({{ humi_floor_data|safe }}, {{ humi_floor_date|safe }});
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Temperature Wall</h5>
+                                    <p class="card-text">
+                                    <h1>°C</h1>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Temperature Floor</h5>
+                                    <p class="card-text">
+                                    <h1>°C</h1>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Humidity Floor</h5>
+                                    <p class="card-text">
+                                    <h1>Feucht</h1>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Humidity Wall</h5>
+                                    <p class="card-text">
+                                    <h1>Feucht</h1>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title card-title-switch">Light</h5>
+                                    <div class="form-check form-switch switch-button">
+                                        <input class="form-check-input" type="checkbox"
+                                               id="flexSwitchCheckDefault"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title card-title-switch">Pump</h5>
+                                    <div class="form-check form-switch switch-button">
+                                        <input class="form-check-input" type="checkbox"
+                                               id="flexSwitchCheckDefault"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title card-title-switch">Heating</h5>
+                                    <div class="form-check form-switch switch-button">
+                                        <input class="form-check-input" type="checkbox"
+                                               id="flexSwitchCheckDefault"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title card-title-switch">Fan</h5>
+                                    <div class="form-check form-switch switch-button">
+                                        <input class="form-check-input" type="checkbox"
+                                               id="flexSwitchCheckDefault"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+{% endblock %}
