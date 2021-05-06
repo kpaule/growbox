@@ -2,9 +2,9 @@ from datetime import datetime, timedelta
 
 from flask import Blueprint, render_template
 from flask_login import login_required
-from sqlalchemy import desc
-
+from growbox import db
 from growbox.models import Metric
+from sqlalchemy import desc, func
 
 home = Blueprint("home", __name__)
 
@@ -20,6 +20,39 @@ def dashboard():
 def dashboard_now():
     metric = Metric.query.order_by(desc(Metric.id)).first()
     return metric.as_dict()
+
+
+@home.route("/dashboard/day/")
+@login_required
+def dashboard_day():
+    date_start = datetime.utcnow() - timedelta(hours=1)
+    date_end = datetime.utcnow()
+
+    avg_dict = {}
+
+    for i in range(24):
+        curr_avg_tuple = db.session.query(func.avg(Metric.temperature_air),
+                                          func.avg(Metric.temperature_ground),
+                                          func.avg(Metric.humidity_air),
+                                          func.avg(Metric.humidity_ground)) \
+            .filter(date_start < Metric.date) \
+            .filter(Metric.date < date_end) \
+            .first()
+        curr_avg_dict = {
+            "date_start": date_start,
+            "date_end": date_end,
+            "temperature_air": curr_avg_tuple[0],
+            "temperature_ground": curr_avg_tuple[1],
+            "humidity_air": curr_avg_tuple[2],
+            "humidity_ground": curr_avg_tuple[3]
+        }
+
+        avg_dict[i] = curr_avg_dict
+
+        date_start = date_start - timedelta(hours=1)
+        date_end = date_end - timedelta(hours=1)
+
+    return avg_dict
 
 
 @home.route("/dashboard/<string:time>/<int:amount>/", methods=["GET", "POST"])
