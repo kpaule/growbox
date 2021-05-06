@@ -28,8 +28,6 @@ def handle_message(client, userdata, message):
         for key, value in data.items():
             # Validate mqtt data to prevent xss vulnerability
             if type(value) == float or value == "on" or value == "off":
-                print(f"{key}: {value}")
-
                 if key == "Bodenfeucht":
                     humidityFloor = HumidityFloor(humidity=value)
                     db.session.add(humidityFloor)

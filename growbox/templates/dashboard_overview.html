@@ -5,6 +5,22 @@
     <h1>Overview</h1>
     <hr>
     <div class="container">
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+
+                var socket = io.connect();
+
+                socket.on("connect", function() {
+                    socket.send("User has connected!");
+                });
+
+            });
+        </script>
+        <ul id=messages></ul>
+        <input type="text" id="myMessage">
+        <button id="sendButton">Send</button>
+
         <div class="row">
             <div class="col-lg-6">
                 <div class="card">

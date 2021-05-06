@@ -14,6 +14,8 @@ login_manager.login_message_category = "info"
 mqtt = Mqtt()
 socketio = SocketIO()
 
+from . import socketio_handler
+
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
