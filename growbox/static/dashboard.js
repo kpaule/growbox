@@ -22,7 +22,7 @@ $(document).ready(function () {
     $('#flex_switch_light').change(function () {
         let status = this.checked ? 1 : 0;
         $.post(`/dashboard/led/${status}/`, function (data, status) {
-            console.log("OK")
+            console.log("Data: " + data + "\nStatus: " + status);
         });
     });
 
@@ -37,13 +37,13 @@ $(document).ready(function () {
         let status = this.checked ? 1 : 0;
         $.post(`/dashboard/heating/${status}/`, function (data, status) {
             console.log("Data: " + data + "\nStatus: " + status);
-        })
-    })
+        });
+    });
 
     $('#flex_switch_fan').change(function () {
         let status = this.checked ? 1 : 0;
         $.post(`/dashboard/fan/${status}/`, function (data, status) {
             console.log("Data: " + data + "\nStatus: " + status);
-        })
-    })
+        });
+    });
 });
