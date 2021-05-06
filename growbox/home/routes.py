@@ -1,6 +1,7 @@
-from growbox.models import Metric
 from flask import Blueprint, render_template
 from flask_login import login_required
+from growbox.models import Metric
+from sqlalchemy import desc
 
 home = Blueprint("home", __name__)
 
@@ -8,10 +9,11 @@ home = Blueprint("home", __name__)
 @home.route('/dashboard/')
 @login_required
 def dashboard():
-    metrics = Metric.query.all()
-    metrics_date = [x.date.strftime("%A, %d. %B %Y %I:%M%p") for x in metrics]
-    return render_template("dashboard.html",
-                           metrics=metrics,
-                           metrics_date=metrics_date)
+    return render_template("dashboard.html")
 
 
+@home.route("/dashboard/now/")
+@login_required
+def dashboard_now():
+    metric = Metric.query.order_by(desc(Metric.id)).first()
+    return metric.as_dict()

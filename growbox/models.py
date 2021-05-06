@@ -31,5 +31,19 @@ class Metric(db.Model):
     heating = db.Column(db.Boolean, nullable=False)
     fan = db.Column(db.Boolean, nullable=False)
 
+    def as_dict(self) -> dict:
+        return {
+            'id': self.id, 
+            'date': self.date, 
+            'temperature_air': self.temperature_air, 
+            'temperature_ground': self.temperature_ground, 
+            'humidity_air': self.humidity_air, 
+            'humidity_ground': self.humidity_ground, 
+            'light': self.light, 
+            'pump': self.pump, 
+            'heating': self.heating, 
+            'fan': self.fan
+        }
+
     def __repr__(self) -> str:
         return f"Metric('{self.date}', '{self.temperature_air}', '{self.temperature_air}', '{self.temperature_ground}', '{self.humidity_wall}', '{self.light}', '{self.pump}', '{self.heating}', '{self.fan}')"

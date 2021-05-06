@@ -19,75 +19,35 @@
 
                 <div class="container">
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-md-6 col-lg-3">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Temperature</h5>
-                                    <canvas id="temperatureChart"></canvas>
-                                    <script type="text/javascript"
-                                            src="{{ url_for('static', filename='chart_temp.js') }}"></script>
-                                    <script type="text/javascript">
-                                        initTemperatureChart({{ temp_floor_data|safe }}, {{ temp_floor_date|safe }});
-                                    </script>
+                                    <h5 class="card-title text-center">Air Temperature <i class="bi bi-thermometer text-primary"></i></h5>
+                                    <p id="temperature_air" class="metric card-text text-center"></p>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-md-6 col-lg-3">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Humidity</h5>
-                                    <canvas id="humidityChart"></canvas>
-                                    <script type="text/javascript"
-                                            src="{{ url_for('static', filename='chart_humi.js') }}"></script>
-                                    <script type="text/javascript">
-                                        initHumidityChart({{ humi_floor_data|safe }}, {{ humi_floor_date|safe }});
-                                    </script>
+                                    <h5 class="card-title text-center">Soil Temperature <i class="bi bi-thermometer text-primary"></i></h5>
+                                    <p id="temperature_ground" class="metric card-text text-center"></p>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <hr>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-3">
+                        <div class="col-md-6 col-lg-3">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Temperature Wall</h5>
-                                    <p class="card-text">
-                                    <h1>°C</h1>
-                                    </p>
+                                    <h5 class="card-title text-center">Air Humidity <i class="bi bi-cloud-drizzle text-primary"></i></h5>
+                                    <p id="humidity_air" class="metric card-text text-center"></p>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-md-6 col-lg-3">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Temperature Floor</h5>
-                                    <p class="card-text">
-                                    <h1>°C</h1>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Humidity Floor</h5>
-                                    <p class="card-text">
-                                    <h1>Feucht</h1>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Humidity Wall</h5>
-                                    <p class="card-text">
-                                    <h1>Feucht</h1>
-                                    </p>
+                                    <h5 class="card-title text-center">Soil Humidity <i class="bi bi-cloud-drizzle text-primary"></i></h5>
+                                    <p id="humidity_ground" class="metric card-text text-center"></p>
                                 </div>
                             </div>
                         </div>
@@ -97,7 +57,7 @@
                 <hr>
                 <div class="container">
                     <div class="row">
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-md-6 col-lg-3">
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title card-title-switch">Light</h5>
@@ -108,7 +68,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-md-6 col-lg-3">
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title card-title-switch">Pump</h5>
@@ -119,7 +79,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-md-6 col-lg-3">
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title card-title-switch">Heating</h5>
@@ -130,7 +90,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-md-6 col-lg-3">
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title card-title-switch">Fan</h5>
@@ -144,8 +104,36 @@
                     </div>
                 </div>
 
+                <hr>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">Temperature</h5>
+                                    <canvas id="temperatureChart"></canvas>
+                                    <script type="text/javascript"
+                                            src="{{ url_for('static', filename='chart_temp.js') }}"></script>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">Humidity</h5>
+                                    <canvas id="humidityChart"></canvas>
+                                    <script type="text/javascript"
+                                            src="{{ url_for('static', filename='chart_humi.js') }}"></script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </main>
         </div>
     </div>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='dashboard.js') }}"></script>
 
 {% endblock %}

@@ -18,3 +18,7 @@ main {
 .card {
   margin-bottom: 8px;
 }
+
+.metric {
+  font-size: 40px;
+}
