@@ -2,10 +2,10 @@ from datetime import datetime, timedelta
 
 from flask import Blueprint, render_template, current_app
 from flask_login import login_required
-from sqlalchemy import desc, func
+from sqlalchemy import desc
 
-from growbox import db, mqtt, create_app
 from growbox.models import Metric
+from sqlalchemy import desc, func
 
 home = Blueprint("home", __name__)
 with create_app().app_context():
