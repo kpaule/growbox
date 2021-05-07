@@ -13,36 +13,46 @@ function getMetricsNow() {
     });
 }
 
-function getAvgDay() {
+function initAvgDay() {
     $.getJSON("/dashboard/day/", function (metrics) {
         console.log(metrics);
         var humidity_air = [];
         var humidity_ground = [];
+        var temperature_air = [];
+        var temperature_ground = [];
         var date = [];
 
         for (var key in metrics){
             metric = metrics[key]
             humidity_air.push(metric.humidity_air)
             humidity_ground.push(metric.humidity_ground)
+            temperature_air.push(metric.temperature_air)
+            temperature_ground.push(metric.temperature_ground)
             date.push(metric.date_start)
         }
         humidity_air.reverse()
         humidity_ground.reverse()
+        temperature_air.reverse()
+        temperature_ground.reverse()
         date.reverse()
 
-        var ctx = document.getElementById('humidityChart');
-        var humidityChart = new Chart(ctx, {
+        var ctx = $('#humidityChart');
+        graph = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: date,
                 datasets: [{
                     label: 'Air Humidity',
                     data: humidity_air,
-                    borderWidth: 1
+                    borderWidth: 1,
+                    backgroundColor: 'rgb(0, 0, 255)',
+                    borderColor: 'rgb(0, 0, 255)'
                 },{
                     label: 'Soil Humidity ',
                     data: humidity_ground,
-                    borderWidth: 1
+                    borderWidth: 1,
+                    backgroundColor: 'rgb(0, 191, 255)',
+                    borderColor: 'rgb(0, 191, 255)'
                 }]
             },
             options: {
@@ -53,15 +63,92 @@ function getAvgDay() {
                 }
             }
         });
+        ctx.data('graph', graph);
+
+        var ctx = $('#temperatureChart');
+        graph = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: date,
+                datasets: [{
+                    label: 'Air Temperature',
+                    data: temperature_air,
+                    borderWidth: 1,
+                    backgroundColor: 'rgb(255, 0, 0)',
+                    borderColor: 'rgb(255, 0, 0)'
+                },{
+                    label: 'Soil Temperature',
+                    data: temperature_ground,
+                    borderWidth: 1,
+                    backgroundColor: 'rgb(255, 140, 0)',
+                    borderColor: 'rgb(255, 140, 0)'
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        ctx.data('graph', graph);
+    });
+}
+
+function updateAvgDay() {
+    $.getJSON("/dashboard/day/", function (metrics) {
+        console.log(metrics);
+        var humidity_air = [];
+        var humidity_ground = [];
+        var temperature_air = [];
+        var temperature_ground = [];
+        var date = [];
+
+        for (var key in metrics){
+            metric = metrics[key]
+            humidity_air.push(metric.humidity_air)
+            humidity_ground.push(metric.humidity_ground)
+            temperature_air.push(metric.temperature_air)
+            temperature_ground.push(metric.temperature_ground)
+            date.push(metric.date_start)
+        }
+        humidity_air.reverse()
+        humidity_ground.reverse()
+        temperature_air.reverse()
+        temperature_ground.reverse()
+        date.reverse()
+
+        var graph = $('#humidityChart').data('graph');
+        humidityChart.data = {
+            labels: date,
+                datasets: [{
+                    data: humidity_air
+                },{
+                    data: humidity_ground
+                }]
+        };
+        graph.update();
+
+        var graph = $('#temperatureChart').data('graph');
+        humidityChart.data = {
+            labels: date,
+                datasets: [{
+                    data: temperature_air
+                },{
+                    data: temperature_ground
+                }]
+        };
+        graph.update();
     });
 }
 
 $(document).ready(function () {
     getMetricsNow();
-    getAvgDay();
+    initAvgDay();
     setInterval(function () {
         getMetricsNow();
-        getAvgDay();
+        updateAvgDay();
     }, 5000);
 
     $('#flex_switch_light').change(function () {

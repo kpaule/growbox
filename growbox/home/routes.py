@@ -28,12 +28,12 @@ def dashboard_now():
 @home.route("/dashboard/day/")
 @login_required
 def dashboard_day():
-    date_start = datetime.utcnow() - timedelta(hours=1)
+    date_start = datetime.utcnow() - timedelta(hours=2)
     date_end = datetime.utcnow()
 
     avg_dict = {}
 
-    for i in range(24):
+    for i in range(12):
         curr_avg_tuple = db.session.query(func.avg(Metric.temperature_air),
                                           func.avg(Metric.temperature_ground),
                                           func.avg(Metric.humidity_air),
@@ -52,8 +52,8 @@ def dashboard_day():
 
         avg_dict[i] = curr_avg_dict
 
-        date_start = date_start - timedelta(hours=1)
-        date_end = date_end - timedelta(hours=1)
+        date_start = date_start - timedelta(hours=2)
+        date_end = date_end - timedelta(hours=2)
 
     return avg_dict
 
