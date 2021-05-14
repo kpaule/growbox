@@ -1,10 +1,10 @@
 function getMetricsNow() {
     $.getJSON("/dashboard/now/", function (metric) {
         console.log(metric);
-        $("#temperature_air").text(metric.temperature_air)
-        $("#temperature_ground").text(metric.temperature_ground)
-        $("#humidity_air").text(metric.humidity_air)
-        $("#humidity_ground").text(metric.humidity_ground)
+        $("#temperature_air").text(metric.temperature_air.toFixed(3))
+        $("#temperature_ground").text(metric.temperature_ground.toFixed(3))
+        $("#humidity_air").text(metric.humidity_air.toFixed(3))
+        $("#humidity_ground").text(metric.humidity_ground.toFixed(3))
 
         $("#flex_switch_light").prop("checked", metric.light)
         $("#flex_switch_pump").prop("checked", metric.pump)
@@ -22,7 +22,7 @@ function initAvgDay() {
         var temperature_ground = [];
         var date = [];
 
-        for (var key in metrics){
+        for (var key in metrics) {
             metric = metrics[key]
             humidity_air.push(metric.humidity_air)
             humidity_ground.push(metric.humidity_ground)
@@ -47,7 +47,7 @@ function initAvgDay() {
                     borderWidth: 1,
                     backgroundColor: 'rgb(0, 0, 255)',
                     borderColor: 'rgb(0, 0, 255)'
-                },{
+                }, {
                     label: 'Soil Humidity ',
                     data: humidity_ground,
                     borderWidth: 1,
@@ -76,7 +76,7 @@ function initAvgDay() {
                     borderWidth: 1,
                     backgroundColor: 'rgb(255, 0, 0)',
                     borderColor: 'rgb(255, 0, 0)'
-                },{
+                }, {
                     label: 'Soil Temperature',
                     data: temperature_ground,
                     borderWidth: 1,
@@ -105,7 +105,7 @@ function updateAvgDay() {
         var temperature_ground = [];
         var date = [];
 
-        for (var key in metrics){
+        for (var key in metrics) {
             metric = metrics[key]
             humidity_air.push(metric.humidity_air)
             humidity_ground.push(metric.humidity_ground)
@@ -122,28 +122,42 @@ function updateAvgDay() {
         var graph = $('#humidityChart').data('graph');
         humidityChart.data = {
             labels: date,
-                datasets: [{
-                    data: humidity_air
-                },{
-                    data: humidity_ground
-                }]
+            datasets: [{
+                data: humidity_air
+            }, {
+                data: humidity_ground
+            }]
         };
         graph.update();
 
         var graph = $('#temperatureChart').data('graph');
         humidityChart.data = {
             labels: date,
-                datasets: [{
-                    data: temperature_air
-                },{
-                    data: temperature_ground
-                }]
+            datasets: [{
+                data: temperature_air
+            }, {
+                data: temperature_ground
+            }]
         };
         graph.update();
     });
 }
 
 $(document).ready(function () {
+    var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+    var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList;
+    var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
+    let recognition = new SpeechRecognition();
+    let speechRecognitionList = new SpeechGrammarList();
+    let colors = ['light on', 'light off', 'pump on', 'pump off', 'heating on', 'heating off', 'fan on', 'fan off'];
+    let grammar = '#JSGF V1.0; grammar colors; public <color> = ' + colors.join(' | ') + ' ;';
+    speechRecognitionList.addFromString(grammar, 1);
+    recognition.grammars = speechRecognitionList;
+    recognition.continuous = false;
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
     getMetricsNow();
     initAvgDay();
     setInterval(function () {
@@ -177,5 +191,78 @@ $(document).ready(function () {
         $.post(`/dashboard/fan/${status}/`, function (data, status) {
             console.log("Data: " + data + "\nStatus: " + status);
         });
+    });
+
+    $('#speech-rec').click(function () {
+        recognition.start();
+        console.log('Ready to receive a color command.');
+        recognition.onresult = function (event) {
+            let command = event.results[0][0].transcript
+            let led_checkbox = document.getElementById("flex_switch_light");
+            let pump_checkbox = document.getElementById("flex_switch_pump");
+            let heating_checkbox = document.getElementById("flex_switch_heating");
+            let fan_checkbox = document.getElementById("flex_switch_fan");
+            console.log('Transcript: ' + command);
+            console.log('Confidence: ' + event.results[0][0].confidence);
+            switch (command) {
+                case "light on":
+                    led_checkbox.checked = true;
+                    $.post(`/dashboard/led/1/`, function (data, status) {
+                        console.log("Data: " + data + "\nStatus: " + status);
+                    });
+                    break;
+                case "light off":
+                    led_checkbox.checked = false;
+                    $.post(`/dashboard/led/0/`, function (data, status) {
+                        console.log("Data: " + data + "\nStatus: " + status);
+                    });
+                    break;
+                case "pump on":
+                    pump_checkbox.checked = true;
+                    $.post(`/dashboard/pump/1/`, function (data, status) {
+                        console.log("Data: " + data + "\nStatus: " + status);
+                    });
+                    break;
+                case "pump off":
+                    pump_checkbox.checked = false;
+                    $.post(`/dashboard/pump/0/`, function (data, status) {
+                        console.log("Data: " + data + "\nStatus: " + status);
+                    });
+                    break;
+                case "heating on":
+                    heating_checkbox.checked = true;
+                    $.post(`/dashboard/heating/1/`, function (data, status) {
+                        console.log("Data: " + data + "\nStatus: " + status);
+                    });
+                    break;
+                case "heating off":
+                    heating_checkbox.checked = false;
+                    $.post(`/dashboard/heating/0/`, function (data, status) {
+                        console.log("Data: " + data + "\nStatus: " + status);
+                    });
+                    break;
+                case "fan on":
+                    fan_checkbox.checked = true;
+                    $.post(`/dashboard/fan/1/`, function (data, status) {
+                        console.log("Data: " + data + "\nStatus: " + status);
+                    });
+                    break;
+                case "fan off":
+                    fan_checkbox.checked = false;
+                    $.post(`/dashboard/fan/0/`, function (data, status) {
+                        console.log("Data: " + data + "\nStatus: " + status);
+                    });
+                    break;
+            }
+        }
+        recognition.onspeechend = function () {
+            recognition.stop();
+        }
+        recognition.onnomatch = function (event) {
+            console.log('Command not recognized');
+        }
+        recognition.onerror = function (event) {
+            console.log('Error occurred in recognition: ' + event.error);
+        }
     });
 });
