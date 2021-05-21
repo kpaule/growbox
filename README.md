@@ -81,7 +81,7 @@ Im Projekt “Klimakontrolle eines Raums“ soll mithilfe eines IoT Geräts eine
 ### Build
 `sudo docker build -t python-growbox .`
 ### Run
-`sudo docker run -p 5000:5000 python-growbox`
+`sudo docker run -p 5001:5001 python-growbox`
 
 ## DB usage
 ```
